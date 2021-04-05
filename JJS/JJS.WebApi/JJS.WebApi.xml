@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>JJS.WebApi</name>
+    </assembly>
+    <members>
+        <member name="M:JJS.WebApi.Controllers.AccountController.AuthenticateAsync(JJS.Application.DTOs.Account.AuthenticationRequest)">
+            <summary>
+                 Authenticate User by email and password.
+            </summary>
+            <param name="request">  dfsadf
+            </param>
+            <returns>A newly created  AuthenticationResponse</returns>
+            <response code="200">Returns the newly created item</response>
+            <response code="400">If the item is null</response> 
+        </member>
+        <member name="T:JJS.WebApi.Controllers.v1.CompanyController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:JJS.WebApi.Controllers.v1.StreamController">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>

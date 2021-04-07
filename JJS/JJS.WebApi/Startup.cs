@@ -15,6 +15,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using System;
+using System.Configuration;
 
 namespace JJS.WebApi
 {
@@ -23,14 +24,15 @@ namespace JJS.WebApi
         public IConfiguration _config { get; }
         private readonly ILogger<Startup> _logger;
 
-        public Startup(ILogger<Startup> logger, IConfiguration configuration)
-        {
-            _logger = logger;
+        public Startup(IConfiguration configuration)
+        {               
             _config = configuration;
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            _logger.LogInformation("ConfigureServices called");
+            var serviceProvider = services.BuildServiceProvider();
+            var logger = serviceProvider.GetService<ILogger<Startup>>();
+            logger.LogInformation("ConfigureServices called");
             try
             {
                 services.AddApplicationLayer();
@@ -49,18 +51,18 @@ namespace JJS.WebApi
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, ex.Message);
+                logger.LogCritical(ex, ex.Message);
                 throw ex;
             }
             finally
             {
-                _logger.LogInformation("ConfigureServices end");
+                logger.LogInformation("ConfigureServices end");
             }
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            _logger.LogInformation("Configure called");
+           
             try
             {
                 if (env.IsDevelopment())
@@ -87,11 +89,11 @@ namespace JJS.WebApi
             }
             catch (Exception ex)
             {
-                _logger.LogInformation(ex, ex.Message);
+                
             }
             finally
             {
-                _logger.LogInformation("Configure end");
+               
             }
         }
     }

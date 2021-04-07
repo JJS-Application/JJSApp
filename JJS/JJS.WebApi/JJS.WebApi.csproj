@@ -46,4 +46,10 @@
     <ProjectReference Include="..\JJS.Infrastructure.Shared\JJS.Infrastructure.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="JJS.WebApi.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

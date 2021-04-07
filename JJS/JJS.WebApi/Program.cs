@@ -51,6 +51,7 @@ namespace JJS.WebApi
                 catch (Exception ex)
                 {
                     Log.Warning(ex, "An error occurred seeding the DB");
+                    Log.Warning(ex.Message);
                 }
                 finally
                 {
@@ -61,7 +62,9 @@ namespace JJS.WebApi
         }
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-            .UseSerilog() //Uses Serilog instead of default .NET Logger
+           .UseSerilog((hostingContext, loggerConfig) =>
+                    loggerConfig.ReadFrom.Configuration(hostingContext.Configuration)
+                ) //Uses Serilog instead of default .NET Logger
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

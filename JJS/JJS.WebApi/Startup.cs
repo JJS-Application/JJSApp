@@ -8,6 +8,8 @@ using JJS.WebApi.Services;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,7 +49,12 @@ namespace JJS.WebApi
 
                 // data
                 services.AddDataProtection()
-                           .SetDefaultKeyLifetime(TimeSpan.FromDays(14));
+                .UseCryptographicAlgorithms(
+                         new AuthenticatedEncryptorConfiguration()
+                     {
+                         EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+                         ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+                     });
             }
             catch (Exception ex)
             {

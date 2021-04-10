@@ -57,6 +57,12 @@ namespace JJS.Infrastructure.Persistence.Contexts
             {
                 property.SetColumnType("decimal(18,6)");
             }
+
+            //builder.Entity<Post>()
+            //          .HasOne(b => b.Blog)
+            //          .WithMany(p => p.Posts)
+            //          .IsRequired();
+
             base.OnModelCreating(builder);
 
         }

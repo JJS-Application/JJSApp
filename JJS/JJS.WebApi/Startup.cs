@@ -11,13 +11,17 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using Swashbuckle.AspNetCore.Swagger;
+
 using System;
 using System.Configuration;
+using System.Text.Json.Serialization;
 
 namespace JJS.WebApi
 {
@@ -42,7 +46,10 @@ namespace JJS.WebApi
                 services.AddPersistenceInfrastructure(_config);
                 services.AddSharedInfrastructure(_config);
                 services.AddSwaggerExtension();
-                services.AddControllers();
+                services.AddControllers().AddJsonOptions(opts =>
+                {
+                    opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
                 services.AddApiVersioningExtension();
                 services.AddHealthChecks();
                 services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();

@@ -1,16 +1,11 @@
-﻿using JJS.Application.Features.Company.Queries.GetCompanyById;
-using JJS.Application.Features.Stream.Commands.CreateStream;
-using JJS.Application.Features.Stream.Commands.DeleteStreamById;
-using JJS.Application.Features.Stream.Commands.UpdateStream;
-using JJS.Application.Features.Stream.Queries.GetAllStream;
+﻿
+using JJS.Application.Interfaces.Repositories;
+using JJS.Application.Parameters;
+using JJS.Application.ViewModels.Company;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace JJS.WebApi.Controllers.v1
@@ -22,48 +17,50 @@ namespace JJS.WebApi.Controllers.v1
     [Authorize]
     public class StreamController : BaseApiController
     {
+        private readonly IStreamRepositoryAsync _streamRepository;
+        public StreamController(IStreamRepositoryAsync streamRepository)
+        {
+            _streamRepository = streamRepository;
+        }
 
         // GET: api/<controller>
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] GetAllStreamParameter filter)
+        public async Task<IActionResult> Get([FromQuery] PaginatedInputModel filter)
         {
-
-            return Ok(await Mediator.Send(new GetAllStreamQuery() { PageSize = filter.PageSize, PageNumber = filter.PageNumber }));
+            var result = await _streamRepository.GetAllByFilterAsync(filter);
+            return Ok(result);
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            return Ok(await Mediator.Send(new GetStreamByIdQuery { Id = id }));
+            return Ok(await _streamRepository.GetByIdAsync(id));
         }
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Post(CreateStreamCommand command)
+        public async Task<IActionResult> Post(StreamViewModel command)
         {
-            return Ok(await Mediator.Send(command));
+            return Ok(await _streamRepository.CreateBusinessStreamAsync(command));
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> Put(int id, UpdateStreamCommand command)
+        public async Task<IActionResult> Put(int id, StreamViewModel command)
         {
             if (id != command.Id)
             {
                 return BadRequest();
             }
-            return Ok(await Mediator.Send(command));
+            return Ok(await _streamRepository.UpdateBusinessStreamAsync(id, command));
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            return Ok(await Mediator.Send(new DeleteStreamCommand { Id = id }));
+            return Ok(await _streamRepository.DeleteBusinessStreamAsync(id));
         }
     }
 }

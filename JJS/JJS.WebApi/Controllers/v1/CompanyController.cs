@@ -1,16 +1,11 @@
-﻿using JJS.Application.Features.Company.Commands.CreateCompany;
-using JJS.Application.Features.Company.Commands.DeleteCompanyById;
-using JJS.Application.Features.Company.Commands.UpdateCompany;
-using JJS.Application.Features.Company.Queries.GetAllCompany;
-using JJS.Application.Features.Company.Queries.GetCompanyById;
-using JJS.Application.Features.Products.Queries.GetAllProducts;
+﻿using JJS.Application.Interfaces.Repositories;
+using JJS.Application.Parameters;
+using JJS.Application.ViewModels.Company;
+using JJS.Application.ViewModels.RequestFilter;
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,50 +16,53 @@ namespace JJS.WebApi.Controllers.v1
     /// 
     /// </summary>
     [ApiVersion("1.0")]
-    [Authorize]
+    [AllowAnonymous]
     public class CompanyController : BaseApiController
     {
-        // GET: api/<controller>
-        [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] GetAllCompanyParameter filter)
+        private readonly ICompanyRepositoryAsync _companyRepository;
+        public CompanyController(ICompanyRepositoryAsync companyRepository)
         {
+            _companyRepository = companyRepository;
+        }
 
-            return Ok(await Mediator.Send(new GetAllCompanyQuery() { PageSize = filter.PageSize, PageNumber = filter.PageNumber }));
+        // GET: api/<controller>
+        [HttpPost("GetAll")]
+        public async Task<IActionResult> Get([FromBody] PaginatedInputModel filter)
+        {
+            var result = await _companyRepository.GetAllByFilterAsync(filter);             
+            return Ok(result);
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            return Ok(await Mediator.Send(new GetStreamByIdQuery { Id = id }));
+            return Ok(await _companyRepository.GetByIdAsync(id));
         }
 
         // POST api/<controller>
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Post(CreateCompanyCommand command)
+        public async Task<IActionResult> Post(OrgViewModel command)
         {
-            return Ok(await Mediator.Send(command));
+            return Ok(await _companyRepository.CreateCompanyAsync(command));
         }
 
         // PUT api/<controller>/5
         [HttpPut("{id}")]
-        [Authorize]
-        public async Task<IActionResult> Put(int id, UpdateCompanyCommand command)
+        public async Task<IActionResult> Put(int id, OrgViewModel command)
         {
             if (id != command.Id)
             {
                 return BadRequest();
             }
-            return Ok(await Mediator.Send(command));
+            return Ok(await _companyRepository.UpdateCompanyAsync(id, command));
         }
 
         // DELETE api/<controller>/5
         [HttpDelete("{id}")]
-        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            return Ok(await Mediator.Send(new DeleteCompanyCommand { Id = id }));
+            return Ok(await _companyRepository.DeleteCompanyAsync(id));
         }
     }
 }

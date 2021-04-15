@@ -23,20 +23,20 @@ namespace JJS.Application.Parameters
     {
         public PaginatedInputModel()
         {
-            if (SortingParams == null)
-            {
-                SortingParams = new List<SortingParams> {
-                new SortingParams
-                {
-                    ColumnName = "Created",
-                    SortOrder = Enums.SortOrders.Desc
-                }
-                };
-            }
+            //if (SortingParams == null)
+            //{
+            //    SortingParams = new List<SortingParams> {
+            //    new SortingParams
+            //    {
+            //        ColumnName = "Created",
+            //        SortOrder = Enums.SortOrders.Desc
+            //    }
+            //    };
+            //}
         }
-        public IEnumerable<SortingParams> SortingParams { set; get; }
-        public IEnumerable<FilterParams> FilterParam { get; set; }
-        public IEnumerable<string> GroupingColumns { get; set; } = null;
+        //public IEnumerable<SortingParams> SortingParams { set; get; }
+        //public IEnumerable<FilterParams> FilterParam { get; set; }
+        //public IEnumerable<string> GroupingColumns { get; set; } = null;
         int pageNumber = 1;
         public int PageNumber { get { return pageNumber; } set { if (value > 1) pageNumber = value; } }
 

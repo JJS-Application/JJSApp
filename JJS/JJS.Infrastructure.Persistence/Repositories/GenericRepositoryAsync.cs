@@ -169,28 +169,28 @@ namespace JJS.Infrastructure.Persistence.Repository
 
         public async Task<PaginatedList<T>> ApplyFilterOrderSortAsync(PaginatedInputModel pagingParams)
         {
-            List<T> result = await GetAll().ToListAsync();
+            var result =  GetAll();
 
-            #region [Filter]  
-            if (pagingParams != null && pagingParams.FilterParam.Any())
-            {
-                result = Filter<T>.FilteredData(pagingParams.FilterParam, result).ToList() ?? result;
-            }
-            #endregion
+            //#region [Filter]  
+            //if (pagingParams != null && pagingParams.FilterParam.Any())
+            //{
+            //    result = Filter<T>.FilteredData(pagingParams.FilterParam, result).ToList() ?? result;
+            //}
+            //#endregion
 
-            #region [Sorting]  
-            if (pagingParams != null && pagingParams.SortingParams.Count() > 0 )
-            {
-                result = Sorting<T>.SortData(result, pagingParams.SortingParams).ToList();
-            }
-            #endregion
+            //#region [Sorting]  
+            //if (pagingParams != null && pagingParams.SortingParams.Count() > 0 )
+            //{
+            //    result = Sorting<T>.SortData(result, pagingParams.SortingParams).ToList();
+            //}
+            //#endregion
 
-            #region [Grouping]  
-            if (pagingParams != null && pagingParams.GroupingColumns != null && pagingParams.GroupingColumns.Count() > 0)
-            {
-                result = Sorting<T>.GroupingData(result, pagingParams.GroupingColumns).ToList() ?? result;
-            }
-            #endregion
+            //#region [Grouping]  
+            //if (pagingParams != null && pagingParams.GroupingColumns != null && pagingParams.GroupingColumns.Count() > 0)
+            //{
+            //    result = Sorting<T>.GroupingData(result, pagingParams.GroupingColumns).ToList() ?? result;
+            //}
+            //#endregion
 
             #region [Paging]  
             return await PaginatedList<T>.CreateAsync(result, pagingParams.PageNumber, pagingParams.PageSize);

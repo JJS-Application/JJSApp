@@ -23,5 +23,9 @@ namespace JJS.Domain.Common
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
 
         public DateTime? LastModified { get; set; }
+
+        public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using JJS.Infrastructure.Identity.Models;
+﻿using JJS.Application.Interfaces;
+using JJS.Infrastructure.Identity.Models;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -7,13 +8,17 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace JJS.Infrastructure.Identity.Contexts
 {
     public class IdentityContext : IdentityDbContext<ApplicationUser>
     {
-        public IdentityContext(DbContextOptions<IdentityContext> options) : base(options)
+        private readonly IDateTimeService _dateTime;
+        public IdentityContext(DbContextOptions<IdentityContext> options, IDateTimeService dateTime) : base(options)
         {
+            _dateTime = dateTime;
         }
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -53,6 +58,22 @@ namespace JJS.Infrastructure.Identity.Contexts
             {
                 entity.ToTable("UserTokens");
             });
+        }
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            foreach (var entry in ChangeTracker.Entries<BaseAudit>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.Created = _dateTime.NowUtc;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.LastModified = _dateTime.NowUtc;
+                        break;
+                }
+            }
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -62,6 +62,7 @@ namespace JJS.WebApi.Extensions
                         }, new List<string>()
                     },
                 });
+                c.OperationFilter<FileUploadOperation>();
             });
         }
         public static void AddApiVersioningExtension(this IServiceCollection services)

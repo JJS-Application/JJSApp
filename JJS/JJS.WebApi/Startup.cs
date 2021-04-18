@@ -1,4 +1,5 @@
 using JJS.Application;
+using JJS.Application.FileUpload;
 using JJS.Application.Interfaces;
 using JJS.Infrastructure.Identity;
 using JJS.Infrastructure.Persistence;
@@ -11,16 +12,11 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-using Swashbuckle.AspNetCore.Swagger;
-
-using System;
-using System.Configuration;
 using System.Text.Json.Serialization;
 
 namespace JJS.WebApi
@@ -36,7 +32,7 @@ namespace JJS.WebApi
         }
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.Configure<DropBoxConfig>(_config.GetSection("DropBoxConfig"));
             services.AddApplicationLayer();
             services.AddIdentityInfrastructure(_config);
             services.AddPersistenceInfrastructure(_config);

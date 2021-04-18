@@ -1,6 +1,7 @@
 ﻿using JJS.Application.DTOs.Account;
 using JJS.Application.Interfaces;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,7 +61,25 @@ namespace JJS.WebApi.Controllers
 
             return Ok(await _accountService.ResetPassword(model));
         }
-      
+
+        [HttpGet("refresh-tokens")]
+        public async Task<IActionResult> GetRefreshTokens([FromQuery]string refreshToken)
+        {
+            var user = await _accountService.RefreshToken(refreshToken, GenerateIPAddress());
+            if (user == null) return NotFound();
+
+            return Ok(user);
+        }
+
+
+        [HttpPost("revoke-token")]
+        [Authorize]
+        public async Task<IActionResult> RevokeToken([FromQuery] string refreshToken)
+        {
+            var response = await _accountService.RevokeToken(refreshToken, GenerateIPAddress());
+            return Ok(response);
+        }
+
         private string GenerateIPAddress()
         {
             if (Request.Headers.ContainsKey("X-Forwarded-For"))

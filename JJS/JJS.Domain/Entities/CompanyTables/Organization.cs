@@ -11,6 +11,12 @@ namespace  JJS.Domain.Entities.CompanyTables
     [Table("Company")]
     public class Organization : AuditableBaseEntity
     {
+        public Organization()
+        {
+            IsDeleted = false;
+            IsActive = true;
+        }
+
         [StringLength(255, MinimumLength = 3)]
         public string Name { get; set; }
 

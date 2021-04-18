@@ -26,7 +26,7 @@ namespace JJS.Infrastructure.Persistence.Contexts
             _dateTime = dateTime;
             _authenticatedUser = authenticatedUser;
         }
-        public DbSet<Product> Products { get; set; }
+   
         public DbSet<BusinessStream> BusinessStream { get; set; }
         public DbSet<Organization> Company { get; set; }
 
